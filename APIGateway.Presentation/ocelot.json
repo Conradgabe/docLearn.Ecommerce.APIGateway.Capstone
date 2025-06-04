@@ -1,0 +1,86 @@
+{
+  "Routes": [
+    // JWT Authentication
+    {
+      "DownstreamPathTemplate": "/api/authentication/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/authentication/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "60s",
+        "Limit": 1,
+        "PeriodTimespan": 10
+      }
+    },
+
+    // Product API
+    {
+      "DownstreamPathTemplate": "/api/products/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/products/",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "Region": "default",
+        "header": "eCommerce-Cache-Control"
+      }
+    },
+
+    // Get product by ID
+    {
+      "DownstreamPathTemplate": "/api/products/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/products/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "Region": "default",
+        "header": "eCommerce-Cache-Control"
+      }
+    },
+
+    // Product: Post, Put, Delete
+    {
+      "DownstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/products/{everything}",
+      "UpstreamHttpMethod": [ "PUT", "POST", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5003",
+    "RateLimitOptions": {
+      "QuotaExceededMessage": "The number of requests has exceeded its limit"
+    }
+  }
+}
